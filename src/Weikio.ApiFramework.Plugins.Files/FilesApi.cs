@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.FileProviders;
 
 namespace Weikio.ApiFramework.Plugins.Files
 {
@@ -9,7 +11,7 @@ namespace Weikio.ApiFramework.Plugins.Files
     {
         public FileApiConfiguration Configuration { get; set; }
 
-        public async Task<ApiFileResult> GetFileAsync(string filePath)
+        public async Task<ApiFileResult> GetAsync(string filePath)
         {
             var result = new ApiFileResult();
             var path = Path.Combine(Configuration.RootPath, filePath);
@@ -30,9 +32,15 @@ namespace Weikio.ApiFramework.Plugins.Files
             return result;
         }
 
-        public ApiFileListResult ListFiles(string directory = "")
+        public ApiFileListResult List(string directory = "")
         {
             string path;
+            var result = new ApiFileListResult
+            {
+                Directory = directory,
+                Files = new List<FileInformation>(),
+                SubDirectories = new List<string>()
+            };
 
             if (string.IsNullOrWhiteSpace(directory))
             {
@@ -44,9 +52,22 @@ namespace Weikio.ApiFramework.Plugins.Files
             }
 
             var files = Directory.GetFiles(path);
-            var subDirectories = Directory.GetDirectories(path);
+            var fileInfos = files.Select(f => new FileInfo(f));
 
-            return new ApiFileListResult { Directory = directory, Files = new List<string>(files), SubDirectories = new List<string>(subDirectories) };
+            foreach (var fileInfo in fileInfos)
+            {                
+                result.Files.Add(new FileInformation
+                {
+                    FileName = fileInfo.Name,
+                    FileSize = fileInfo.Length,
+                    UpdatedDate = fileInfo.LastWriteTimeUtc,
+                    CreatedDate = fileInfo.CreationTimeUtc
+                });
+            }
+
+            result.SubDirectories.AddRange(Directory.GetDirectories(path));
+
+            return result;
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Weikio.ApiFramework.Plugins.Files
         public class ApiFileListResult
         {
             public string Directory { get; set; }
-            public List<string> Files { get; set; }
+            public List<FileInformation> Files { get; set; }
             public List<string> SubDirectories { get; set; }
         }
     }
