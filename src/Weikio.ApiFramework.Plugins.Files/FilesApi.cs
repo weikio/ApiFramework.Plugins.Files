@@ -90,7 +90,19 @@ namespace Weikio.ApiFramework.Plugins.Files
             {
                 await file.WriteAsync(decoded, 0, decoded.Length);
             }            
-        }       
+        }
+
+        public void Delete(string filePath)
+        {            
+            if (Configuration.Mode != FileMode.ReadWrite)
+            {
+                throw new UnauthorizedAccessException("Mode is set to Read in configuration, file deleting is not allowed.");
+            }
+            
+            var fullPath = Path.Combine(Configuration?.RootPath ?? "", filePath);
+
+            File.Delete(fullPath);
+        }
     }
     
     public class FileContent 
