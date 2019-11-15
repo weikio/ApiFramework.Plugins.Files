@@ -1,9 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Extensions.FileProviders;
 
 namespace Weikio.ApiFramework.Plugins.Files
 {
@@ -14,7 +14,7 @@ namespace Weikio.ApiFramework.Plugins.Files
         public async Task<ApiFileResult> GetAsync(string filePath)
         {
             var result = new ApiFileResult();
-            var path = Path.Combine(Configuration.RootPath, filePath);
+            var path = Path.Combine(Configuration?.RootPath ?? "", filePath);
 
             using (var file = File.Open(path, System.IO.FileMode.Open))
             {
@@ -42,13 +42,15 @@ namespace Weikio.ApiFramework.Plugins.Files
                 SubDirectories = new List<string>()
             };
 
+            var rootPath = Configuration?.RootPath ?? "";
+
             if (string.IsNullOrWhiteSpace(directory))
             {
-                path = Configuration.RootPath;
+                path = rootPath;
             }
             else
             {
-                path = Path.Combine(Configuration.RootPath, directory);
+                path = Path.Combine(rootPath, directory);
             }
 
             var files = Directory.GetFiles(path);
@@ -69,5 +71,30 @@ namespace Weikio.ApiFramework.Plugins.Files
 
             return result;
         }
+
+        public async Task Create(string filePath, FileContent content) 
+        {
+            //TODO: Find a way to get byte array as an argument directly. FileContent class is only to make the API to read the contents from body instead
+            //of query string, and FileContent.Content expects Base64 encoded string instead of a byte array.
+
+            if (Configuration.Mode != FileMode.ReadWrite)
+            {
+                throw new UnauthorizedAccessException("Mode is set to Read in configuration, writing is not allowed.");
+            }
+
+            var decoded = Convert.FromBase64String(content.Content);
+            
+            var fullPath = Path.Combine(Configuration?.RootPath ?? "", filePath);
+
+            using (var file = File.OpenWrite(fullPath))
+            {
+                await file.WriteAsync(decoded, 0, decoded.Length);
+            }            
+        }       
+    }
+    
+    public class FileContent 
+    {
+        public string Content { get; set; }
     }
 }
