@@ -44,8 +44,9 @@ namespace Weikio.ApiFramework.Plugins.Files
             }
 
             var files = Directory.GetFiles(path);
+            var subDirectories = Directory.GetDirectories(path);
 
-            return new ApiFileListResult { Directory = directory, Files = new List<string>(files) };
+            return new ApiFileListResult { Directory = directory, Files = new List<string>(files), SubDirectories = new List<string>(subDirectories) };
         }
     }
 }
