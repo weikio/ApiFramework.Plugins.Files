@@ -7,13 +7,19 @@ using Microsoft.AspNetCore.StaticFiles;
 
 namespace Weikio.ApiFramework.Plugins.Files
 {
-    public partial class FilesApi
+    public class FilesRead
     {
         public FileApiConfiguration Configuration { get; set; }
 
-        public async Task<ApiFileResult> GetAsync(string filePath)
+        public async Task<FileResult> GetAsync(string filePath)
         {
-            var result = new ApiFileResult();
+            var result = new FileResult();
+
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                throw new ArgumentException("File path must be supplied.", nameof(filePath));
+            }
+
             var path = Path.Combine(Configuration?.RootPath ?? "", filePath);
 
             using (var file = File.Open(path, System.IO.FileMode.Open))
@@ -32,10 +38,10 @@ namespace Weikio.ApiFramework.Plugins.Files
             return result;
         }
 
-        public ApiFileListResult List(string directory = "")
+        public FileListResult List(string directory = "")
         {
             string path;
-            var result = new ApiFileListResult
+            var result = new FileListResult
             {
                 Directory = directory,
                 Files = new List<FileInformation>(),
@@ -70,43 +76,6 @@ namespace Weikio.ApiFramework.Plugins.Files
             result.SubDirectories.AddRange(Directory.GetDirectories(path));
 
             return result;
-        }
-
-        public async Task Create(string filePath, FileContent content) 
-        {
-            //TODO: Find a way to get byte array as an argument directly. FileContent class is only to make the API to read the contents from body instead
-            //of query string, and FileContent.Content expects Base64 encoded string instead of a byte array.
-
-            if (Configuration.Mode != FileMode.ReadWrite)
-            {
-                throw new UnauthorizedAccessException("Mode is set to Read in configuration, writing is not allowed.");
-            }
-
-            var decoded = Convert.FromBase64String(content.Content);
-            
-            var fullPath = Path.Combine(Configuration?.RootPath ?? "", filePath);
-
-            using (var file = File.OpenWrite(fullPath))
-            {
-                await file.WriteAsync(decoded, 0, decoded.Length);
-            }            
-        }
-
-        public void Delete(string filePath)
-        {            
-            if (Configuration.Mode != FileMode.ReadWrite)
-            {
-                throw new UnauthorizedAccessException("Mode is set to Read in configuration, file deleting is not allowed.");
-            }
-            
-            var fullPath = Path.Combine(Configuration?.RootPath ?? "", filePath);
-
-            File.Delete(fullPath);
-        }
-    }
-    
-    public class FileContent 
-    {
-        public string Content { get; set; }
+        }      
     }
 }
