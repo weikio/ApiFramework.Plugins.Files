@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Weik.io</Authors>
+    <Company>Weik.io</Company>
+    <Description>Files plugin for Api Framework.</Description>
+    <PackageDescription>Files plugin for Api Framework.</PackageDescription>
+    <PackageProjectUrl>https://weik.io/apiframework</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/weikio/ApiFramework.Plugins.Files</RepositoryUrl>
+    <Copyright>©2021 Weik.io</Copyright>
+    <PackageId>Weikio.ApiFramework.Plugins.Files</PackageId>
+    <Product>Weikio.ApiFramework.Plugins.Files</Product>
+    <AssemblyName>Weikio.ApiFramework.Plugins.Files</AssemblyName>
+    <PackageTags>apiframework;files</PackageTags>
+    <PackageIcon>logo_256.png</PackageIcon>
+    <Title>Files plugin for Api Framework.</Title>
+    <MinVerMinimumMajorMinor>1.0</MinVerMinimumMajorMinor>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MinVer" Version="2.0.0" PrivateAssets="all" />
+    <PackageReference Include="Weikio.ApiFramework.SDK" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../../docs/logo_256.png" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+  
+</Project>
