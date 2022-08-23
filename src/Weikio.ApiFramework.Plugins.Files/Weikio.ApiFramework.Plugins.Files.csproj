@@ -10,7 +10,7 @@
     <PackageDescription>Files plugin for Api Framework.</PackageDescription>
     <PackageProjectUrl>https://weik.io/apiframework</PackageProjectUrl>
     <RepositoryUrl>https://github.com/weikio/ApiFramework.Plugins.Files</RepositoryUrl>
-    <Copyright>©2021 Weik.io</Copyright>
+    <Copyright>©2022 Weik.io</Copyright>
     <PackageId>Weikio.ApiFramework.Plugins.Files</PackageId>
     <Product>Weikio.ApiFramework.Plugins.Files</Product>
     <AssemblyName>Weikio.ApiFramework.Plugins.Files</AssemblyName>
@@ -22,9 +22,13 @@
 
   <ItemGroup>
     <PackageReference Include="MinVer" Version="2.0.0" PrivateAssets="all" />
-    <PackageReference Include="Weikio.ApiFramework.SDK" Version="1.0.0" />
+    <PackageReference Include="Weikio.ApiFramework.SDK" Version="1.2.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  
   <ItemGroup>
     <None Include="../../docs/logo_256.png" Pack="true" Visible="false" PackagePath="" />
   </ItemGroup>

@@ -25,7 +25,7 @@ namespace ApiFramework.Plugins.Files.Sample
             services.AddApiFrameworkStarterKit()
                 .AddFilesApi("/myfiles", new FileApiConfiguration()
                 {
-                    Mode = FileMode.Read, RootPath = @"c:\temp"
+                    Mode = FileMode.ReadWrite, RootPath = @"c:\temp"
                 });
         }
 
