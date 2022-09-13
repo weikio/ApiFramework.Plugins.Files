@@ -8,12 +8,12 @@ namespace Weikio.ApiFramework.Plugins.Files
     {
         public static IApiFrameworkBuilder AddFilesApi(this IApiFrameworkBuilder builder, string endpoint = null, FileApiConfiguration configuration = null)
         {
-            builder.Services.AddEpassi(endpoint, configuration);
+            builder.Services.AddFilesApi(endpoint, configuration);
 
             return builder;
         }
 
-        public static IServiceCollection AddEpassi(this IServiceCollection services, string endpoint = null, FileApiConfiguration configuration = null)
+        public static IServiceCollection AddFilesApi(this IServiceCollection services, string endpoint = null, FileApiConfiguration configuration = null)
         {
             services.RegisterPlugin(endpoint, configuration);
 
