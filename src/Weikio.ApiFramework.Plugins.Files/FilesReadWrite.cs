@@ -13,15 +13,18 @@ namespace Weikio.ApiFramework.Plugins.Files
         {
             if (string.IsNullOrWhiteSpace(content?.FilePath))
             {
-                throw new ArgumentException("File name must be supplied.", nameof(content.FilePath));
+                throw new ArgumentException("File name must be supplied. Ensure file name is given in form data format.", nameof(content.FilePath));
+            }
+
+            if(content.Data is null)
+            {
+                throw new ArgumentException("Data must be supplied.", nameof(content.Data));
             }
 
             var fullPath = Path.Combine(Configuration?.RootPath ?? "", content.FilePath);
 
-            using (var stream = System.IO.File.OpenWrite(fullPath))
-            {
-                await content.Data.CopyToAsync(stream);
-            }
+            using var stream = File.OpenWrite(fullPath);
+            await content.Data.CopyToAsync(stream);
         }
 
         [HttpDelete]
